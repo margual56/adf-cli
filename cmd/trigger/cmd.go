@@ -26,6 +26,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	TriggerCmd.AddCommand(GetTriggerCmd)
+	TriggerCmd.AddCommand(ListTriggerCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 

@@ -60,7 +60,6 @@ func init() {
 	rootCmd.PersistentFlags().String("subscriptionId", "", "The subscription identifier.")
 	rootCmd.PersistentFlags().String("resourceGroupName", "", "The resource group name.")
 	rootCmd.PersistentFlags().String("factoryName", "", "The factory name.")
-	rootCmd.PersistentFlags().String("triggerName", "", "The trigger name.")
 
 	rootCmd.MarkPersistentFlagRequired("subscriptionId")
 	rootCmd.MarkPersistentFlagRequired("resourceGroupName")
