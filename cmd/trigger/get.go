@@ -4,10 +4,12 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package trigger
 
 import (
+	"context"
 	"fmt"
-	"net/http"
-	"os"
+	"log"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
 )
 
@@ -29,16 +31,21 @@ to quickly create a Cobra application.`,
 		factoryName := cmd.Flag("factoryName").Value.String()
 		triggerName := cmd.Flag("triggerName").Value.String()
 
-		requestUrl := fmt.Sprint("https://management.azure.com/subscriptions/", subscriptionId, "/resourceGroups/", resourceGroupName, "/providers/Microsoft.DataFactory/factories/", factoryName, "/triggers/", triggerName, "?api-version=2018-06-01")
-
-		res, err := http.Get(requestUrl)
+		cred, err := azidentity.NewDefaultAzureCredential(nil)
 		if err != nil {
-			fmt.Printf("error making http request: %s\n", err)
-			os.Exit(1)
+			log.Fatalf("failed to obtain a credential: %v", err)
+		}
+		ctx := context.Background()
+		clientFactory, err := armdatafactory.NewClientFactory(subscriptionId, cred, nil)
+		if err != nil {
+			log.Fatalf("failed to create client: %v", err)
+		}
+		res, err := clientFactory.NewTriggersClient().Get(ctx, resourceGroupName, factoryName, triggerName, &armdatafactory.TriggersClientGetOptions{IfNoneMatch: nil})
+		if err != nil {
+			log.Fatalf("failed to finish the request: %v", err)
 		}
 
-		fmt.Printf("client: got response!\n")
-		fmt.Printf("client: status code: %d\n", res.StatusCode)
+		fmt.Printf("client: received response from server: %v\n", res.Properties)
 	},
 }
 
