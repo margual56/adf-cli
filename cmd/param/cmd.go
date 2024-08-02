@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trigger
+package param
 
 import (
 	"fmt"
@@ -71,11 +71,11 @@ func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, err
 }
 
 // triggerCmd represents the trigger command
-var TriggerCmd = &cobra.Command{
-	Use: "trigger [command]",
+var ParamCmd = &cobra.Command{
+	Use: "param [command]",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Explain that trigger needs a subcommand and suggest the subcommands available
-		fmt.Println("trigger needs a subcommand. Available subcommands are:")
+		fmt.Println("param needs a subcommand. Available subcommands are:")
 		for _, cmd := range cmd.Commands() {
 			fmt.Printf("  %s\n", cmd.Use)
 		}
@@ -83,10 +83,8 @@ var TriggerCmd = &cobra.Command{
 }
 
 func init() {
-	TriggerCmd.AddCommand(ListTriggerCmd)
-	TriggerCmd.AddCommand(GetTriggerCmd)
-	TriggerCmd.AddCommand(StartTriggerCmd)
-	TriggerCmd.AddCommand(StopTriggerCmd)
+	ParamCmd.AddCommand(UpdateParamCmd)
+	ParamCmd.AddCommand(ListParamCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 

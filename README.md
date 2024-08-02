@@ -127,6 +127,69 @@ Global Flags:
       --subscriptionId string      The subscription identifier.
 ```
 
+### Parameters
+
+```bash
+> adf-cli parameter -h
+Usage:
+  adf-cli param [command] [flags]
+  adf-cli param [command]
+
+Available Commands:
+  list        List all global parameters from a factory
+  update      Update a global parameter in a data factory
+
+Flags:
+  -h, --help   help for param
+
+Global Flags:
+      --factoryName string         The factory name.
+      --resourceGroupName string   The resource group name.
+      --subscriptionId string      The subscription identifier.
+
+Use "adf-cli param [command] --help" for more information about a command.
+```
+
+#### List
+
+```bash
+> adf-cli parameter list -h
+List all global parameters from a factory
+
+Usage:
+  adf-cli param list <globalParameterName> [flags]
+
+Flags:
+  -h, --help   help for list
+
+Global Flags:
+      --factoryName string         The factory name.
+      --resourceGroupName string   The resource group name.
+      --subscriptionId string      The subscription identifier.
+```
+
+#### Update
+
+```bash
+> adf-cli parameter update -h
+Create or update a global parameter in a data factory
+
+Usage:
+  adf-cli param update <globalParameterName> [flags]
+
+Flags:
+      --group string   The group the parameter belongs to (default "default")
+  -h, --help           help for update
+      --type string    The type of the parameter (default "string")
+      --value string   The value of the parameter
+
+Global Flags:
+      --factoryName string         The factory name.
+      --resourceGroupName string   The resource group name.
+      --subscriptionId string      The subscription identifier.
+```
+
+
 ## Configuration
 
 The CLI uses the Azure SDK for Go to interact with the Azure Data Factory service. The SDK requires the following environment variables to be set:
