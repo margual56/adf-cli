@@ -72,9 +72,7 @@ func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, err
 
 // triggerCmd represents the trigger command
 var TriggerCmd = &cobra.Command{
-	Use:   "trigger",
-	Short: "",
-	Long:  "",
+	Use: "trigger",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Explain that trigger needs a subcommand and suggest the subcommands available
 		fmt.Println("trigger needs a subcommand. Available subcommands are:")
