@@ -135,12 +135,6 @@ The CLI uses the Azure SDK for Go to interact with the Azure Data Factory servic
 - AZURE_CLIENT_SECRET
 - AZURE_TENANT_ID
 
-You can set these environment variables in your shell. Otherwise, you will have to provide them as flags to the CLI:
-```bash
-AZURE_CLIENT_ID=your-client-id
-AZURE_CLIENT_SECRET=your-client-secret
-AZURE_TENANT_ID=your-tenant-id
-```
 
 You can also set the flags factoryName, resourceGroupName, and subscriptionId as environment variables:
 ```bash
