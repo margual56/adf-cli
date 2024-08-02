@@ -91,12 +91,12 @@ var UpdateParamCmd = &cobra.Command{
 }
 
 func init() {
-	UpdateParamCmd.Flags().String("group", "default", "The group the parameter belongs to")
+	UpdateParamCmd.Flags().StringP("group", "g", "default", "The group the parameter belongs to")
 
-	UpdateParamCmd.Flags().String("type", "string", "The type of the parameter")
+	UpdateParamCmd.Flags().StringP("type", "t", "string", "The type of the parameter")
 	UpdateParamCmd.MarkFlagRequired("type")
 
-	UpdateParamCmd.Flags().String("value", "", "The value of the parameter")
+	UpdateParamCmd.Flags().StringP("value", "v", "", "The value of the parameter")
 	UpdateParamCmd.MarkFlagRequired("value")
 
 	// triggerCmd.AddCommand(getCmd)

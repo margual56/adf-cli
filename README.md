@@ -208,7 +208,11 @@ SUBSCRIPTION_ID=your-subscription-id
 
 ## Roadmap
 
-- [ ] Add the remaining operations for triggers.
+- [ ] Add operations for triggers.
+  - [x] Get a trigger
+  - [x] List Triggers By Factory
+  - [x] Start a trigger
+  - [x] Stop a trigger
   - [ ] Create or Update
   - [ ] Delete
   - [ ] Get Event Subscription Status
@@ -219,10 +223,10 @@ SUBSCRIPTION_ID=your-subscription-id
   - [ ] Query Trigger Runs By Factory
   - [ ] Rerun a single trigger run by runId
 - [ ] Add operations for Global Parameters
-  - [ ] Create or Update
+  - [x] Create or Update
   - [ ] Delete
-  - [ ] Get
-  - [ ] List By Factory
+  - [x] Get
+  - [x] List By Factory
 
 
 ## Contributing

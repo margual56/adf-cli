@@ -85,6 +85,7 @@ var ParamCmd = &cobra.Command{
 func init() {
 	ParamCmd.AddCommand(UpdateParamCmd)
 	ParamCmd.AddCommand(ListParamCmd)
+	ParamCmd.AddCommand(GetParamCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 
