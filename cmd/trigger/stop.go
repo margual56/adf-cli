@@ -5,16 +5,14 @@ package trigger
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
 )
 
 // getCmd represents the get command
-var GetTriggerCmd = &cobra.Command{
-	Use:   "get <triggerName>",
+var StopTriggerCmd = &cobra.Command{
+	Use:   "stop <triggerName>",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -33,12 +31,17 @@ to quickly create a Cobra application.`,
 		}
 
 		ctx := context.Background()
-		res, err := clientFactory.NewTriggersClient().Get(ctx, resourceGroupName, factoryName, triggerName, &armdatafactory.TriggersClientGetOptions{IfNoneMatch: nil})
+		log.Printf("stopping trigger %q", triggerName)
+		poller, err := clientFactory.NewTriggersClient().BeginStop(ctx, resourceGroupName, factoryName, triggerName, nil)
 		if err != nil {
 			log.Fatalf("failed to finish the request: %v", err)
 		}
+		_, err = poller.PollUntilDone(ctx, nil)
+		if err != nil {
+			log.Fatalf("failed to pull the result: %v", err)
+		}
 
-		fmt.Printf("client: received response from server: %v\n", res.Properties)
+		log.Printf("trigger %q stopped successfully", triggerName)
 	},
 }
 

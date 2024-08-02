@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/margual56/adf-cli/cmd/trigger"
 )
@@ -61,10 +62,13 @@ func init() {
 	rootCmd.PersistentFlags().String("resourceGroupName", "", "The resource group name.")
 	rootCmd.PersistentFlags().String("factoryName", "", "The factory name.")
 
-	rootCmd.MarkPersistentFlagRequired("subscriptionId")
-	rootCmd.MarkPersistentFlagRequired("resourceGroupName")
-	rootCmd.MarkPersistentFlagRequired("factoryName")
-	rootCmd.MarkPersistentFlagRequired("triggerName")
+	// rootCmd.MarkPersistentFlagRequired("subscriptionId")
+	// rootCmd.MarkPersistentFlagRequired("resourceGroupName")
+	// rootCmd.MarkPersistentFlagRequired("factoryName")
+
+	viper.BindEnv("subscriptionId", "SUBSCRIPTION_ID")
+	viper.BindEnv("resourceGroupName", "RESOURCE_GROUP_NAME")
+	viper.BindEnv("factoryName", "FACTORY_NAME")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

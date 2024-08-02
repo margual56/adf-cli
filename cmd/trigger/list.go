@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
 )
 
@@ -21,22 +19,15 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("client: making http request to server...\n")
+		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
 
-		subscriptionId := cmd.Flag("subscriptionId").Value.String()
-		resourceGroupName := cmd.Flag("resourceGroupName").Value.String()
-		factoryName := cmd.Flag("factoryName").Value.String()
-
-		cred, err := azidentity.NewDefaultAzureCredential(nil)
-		if err != nil {
-			log.Fatalf("failed to obtain a credential: %v", err)
-		}
-		ctx := context.Background()
-		clientFactory, err := armdatafactory.NewClientFactory(subscriptionId, cred, nil)
+		clientFactory, err := GetClientFactory(subscriptionId)
 		if err != nil {
 			log.Fatalf("failed to create client: %v", err)
 		}
 		pager := clientFactory.NewTriggersClient().NewListByFactoryPager(resourceGroupName, factoryName, nil)
+
+		ctx := context.Background()
 		for pager.More() {
 			page, err := pager.NextPage(ctx)
 			if err != nil {

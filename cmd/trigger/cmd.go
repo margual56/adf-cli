@@ -5,9 +5,46 @@ package trigger
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
+
+func GetArgs(cmd *cobra.Command, args []string) (string, string, string) {
+	var subscriptionId string
+	if viper.IsSet("subscriptionId") {
+		subscriptionId = viper.GetString("subscriptionId")
+	} else {
+		subscriptionId = cmd.Flag("subscriptionId").Value.String()
+	}
+
+	var resourceGroupName string
+	if viper.IsSet("resourceGroupName") {
+		resourceGroupName = viper.GetString("resourceGroupName")
+	} else {
+		resourceGroupName = cmd.Flag("resourceGroupName").Value.String()
+	}
+
+	var factoryName string
+	if viper.IsSet("factoryName") {
+		factoryName = viper.GetString("factoryName")
+	} else {
+		factoryName = cmd.Flag("factoryName").Value.String()
+	}
+
+	return subscriptionId, resourceGroupName, factoryName
+}
+
+func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, error) {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("failed to obtain a credential: %v", err)
+	}
+	return armdatafactory.NewClientFactory(subscriptionId, cred, nil)
+}
 
 // triggerCmd represents the trigger command
 var TriggerCmd = &cobra.Command{
@@ -27,6 +64,8 @@ to quickly create a Cobra application.`,
 func init() {
 	TriggerCmd.AddCommand(GetTriggerCmd)
 	TriggerCmd.AddCommand(ListTriggerCmd)
+	TriggerCmd.AddCommand(StartTriggerCmd)
+	TriggerCmd.AddCommand(StopTriggerCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 
