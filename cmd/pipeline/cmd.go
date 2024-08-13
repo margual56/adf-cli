@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package param
+package pipeline
 
 import (
 	"fmt"
@@ -71,8 +71,8 @@ func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, err
 }
 
 // triggerCmd represents the trigger command
-var ParamCmd = &cobra.Command{
-	Use: "param [command]",
+var PipelineCmd = &cobra.Command{
+	Use: "pipeline [command]",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Explain that trigger needs a subcommand and suggest the subcommands available
 		fmt.Println("param needs a subcommand. Available subcommands are:")
@@ -83,9 +83,8 @@ var ParamCmd = &cobra.Command{
 }
 
 func init() {
-	ParamCmd.AddCommand(UpdateParamCmd)
-	ParamCmd.AddCommand(ListParamCmd)
-	ParamCmd.AddCommand(GetParamCmd)
+	PipelineCmd.AddCommand(RunPipelineCmd)
+	PipelineCmd.AddCommand(ListPipelineCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 
