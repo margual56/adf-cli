@@ -19,7 +19,6 @@ package pipeline
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
@@ -27,51 +26,36 @@ import (
 )
 
 // getCmd represents the get command
-var RunPipelineCmd = &cobra.Command{
-	Use:   "run <pipelineName> [parameters]",
-	Short: "Creates a run of a pipeline.",
-	Long: `Creates a run of a pipeline.
-For example:
-  adf-cli pipeline run myPipeline "{\"param1\": \"value1\", \"param2\": \"value2\"}"
-	`,
-	Args: cobra.MinimumNArgs(1),
+var CancelPipelineRunCmd = &cobra.Command{
+	Use:   "cancel <runId>",
+	Short: "Cancel a pipeline run",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
-		var pipelineName = args[0]
-
-		var runParameters map[string]any
-		if len(args) < 2 {
-			runParameters = make(map[string]any)
-		} else {
-			// Parse the parameters as J
-			err := json.Unmarshal([]byte(args[1]), &runParameters)
-			if err != nil {
-				log.Fatalf("Unable to marshal JSON due to %s", err)
-			}
-		}
+		var runId = args[0]
 
 		clientFactory, err := GetClientFactory(subscriptionId)
 		if err != nil {
 			log.Fatalf("failed to create client: %v", err)
 		}
 
+		recursive, err := cmd.Flags().GetBool("recursive")
+		if err != nil {
+			log.Fatalf("failed to get the value of the flag: %v", err)
+		}
+
 		ctx := context.Background()
-		log.Println("running pipeline...")
-		res, err := clientFactory.NewPipelinesClient().CreateRun(ctx, resourceGroupName, factoryName, pipelineName, &armdatafactory.PipelinesClientCreateRunOptions{ReferencePipelineRunID: nil,
-			IsRecovery:        nil,
-			StartActivityName: nil,
-			StartFromFailure:  nil,
-			Parameters:        runParameters,
-		})
+		_, err = clientFactory.NewPipelineRunsClient().Cancel(ctx, resourceGroupName, factoryName, runId, &armdatafactory.PipelineRunsClientCancelOptions{IsRecursive: &recursive})
 		if err != nil {
 			log.Fatalf("failed to finish the request: %v", err)
 		} else {
-			log.Printf("success! Run ID: %v\n", *res.RunID)
+			log.Print("pipeline run canceled successfully")
 		}
 	},
 }
 
 func init() {
+	CancelPipelineRunCmd.Flags().BoolP("recursive", "r", false, "Cancel recursively")
 	// triggerCmd.AddCommand(getCmd)
 
 	// Here you will define your flags and configuration settings.

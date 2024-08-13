@@ -85,6 +85,7 @@ var PipelineCmd = &cobra.Command{
 func init() {
 	PipelineCmd.AddCommand(RunPipelineCmd)
 	PipelineCmd.AddCommand(ListPipelineCmd)
+	PipelineCmd.AddCommand(CancelPipelineRunCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 

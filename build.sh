@@ -6,7 +6,7 @@ fi
 mkdir out
 
 # Get the version from the go.mod file
-version="0.2.1"
+version="0.2.2"
 
 env GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o    "out/adf-cli_${version}_linux_arm64"
 env GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o      "out/adf-cli_${version}_linux_arm"
@@ -33,7 +33,7 @@ for file in *; do
         elif [[ "$file" == *"windows"* ]]; then
             mv "$file" "adf-cli.exe"
             # Get the name of the file without the '.exe' extension
-            zip_name=$(echo "$file" | tr -d ".exe")
+            zip_name=$(basename "$file" ".exe")
             zip "${zip_name}.zip" "adf-cli.exe"
             rm -rf "adf-cli.exe"
         fi
