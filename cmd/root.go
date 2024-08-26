@@ -24,6 +24,7 @@ import (
 
 	"github.com/margual56/adf-cli/cmd/param"
 	"github.com/margual56/adf-cli/cmd/pipeline"
+	"github.com/margual56/adf-cli/cmd/run"
 	"github.com/margual56/adf-cli/cmd/trigger"
 )
 
@@ -47,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(trigger.TriggerCmd)
 	rootCmd.AddCommand(param.ParamCmd)
 	rootCmd.AddCommand(pipeline.PipelineCmd)
+	rootCmd.AddCommand(run.RunCmd)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,

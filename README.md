@@ -28,6 +28,22 @@ Flags:
 Use "adf-cli [command] --help" for more information about a command.
 ```
 
+## Configuration
+
+The CLI uses the Azure SDK for Go to interact with the Azure Data Factory service. The SDK requires the following environment variables to be set:
+
+- AZURE_CLIENT_ID
+- AZURE_CLIENT_SECRET
+- AZURE_TENANT_ID
+
+
+You can also set the flags factoryName, resourceGroupName, and subscriptionId as environment variables:
+```bash
+FACTORY_NAME=your-factory-name
+RESOURCE_GROUP_NAME=your-resource-group-name
+SUBSCRIPTION_ID=your-subscription-id
+```
+
 ## Commands
 
 ### Trigger
@@ -189,23 +205,6 @@ Global Flags:
       --subscriptionId string      The subscription identifier.
 ```
 
-
-## Configuration
-
-The CLI uses the Azure SDK for Go to interact with the Azure Data Factory service. The SDK requires the following environment variables to be set:
-
-- AZURE_CLIENT_ID
-- AZURE_CLIENT_SECRET
-- AZURE_TENANT_ID
-
-
-You can also set the flags factoryName, resourceGroupName, and subscriptionId as environment variables:
-```bash
-FACTORY_NAME=your-factory-name
-RESOURCE_GROUP_NAME=your-resource-group-name
-SUBSCRIPTION_ID=your-subscription-id
-```
-
 ## Roadmap
 
 - [ ] Add operations for triggers.
@@ -222,6 +221,14 @@ SUBSCRIPTION_ID=your-subscription-id
   - [ ] Cancel a single trigger run by runId
   - [ ] Query Trigger Runs By Factory
   - [ ] Rerun a single trigger run by runId
+- [ ] Add operations for pipelines
+  - [ ] Create or Update
+  - [ ] Delete
+  - [ ] Get
+  - [x] List By Factory
+  - [ ] Query By Factory
+  - [x] Run a pipeline
+  - [x] Cancel a pipeline run
 - [ ] Add operations for Global Parameters
   - [x] Create or Update
   - [ ] Delete
