@@ -22,7 +22,6 @@ import (
 	"log"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/billing/armbilling"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -71,28 +70,6 @@ func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, err
 	return armdatafactory.NewClientFactory(subscriptionId, cred, nil)
 }
 
-func GetInvoicesClient(subscriptionId string) (*armbilling.InvoicesClient, error) {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-
-	clientFactory, err := armbilling.NewInvoicesClient(subscriptionId, cred, nil)
-
-	return clientFactory, nil
-}
-
-func GetBillingClient(subscriptionId string) (*armbilling.ClientFactory, error) {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
-	}
-
-	clientFactory, err := armbilling.NewClientFactory(subscriptionId, cred, nil)
-
-	return clientFactory, nil
-}
-
 // triggerCmd represents the trigger command
 var RunCmd = &cobra.Command{
 	Use: "run [command]",
@@ -107,7 +84,7 @@ var RunCmd = &cobra.Command{
 
 func init() {
 	RunCmd.AddCommand(GetRunCmd)
-	RunCmd.AddCommand(RunAnalysisCmd)
+	RunCmd.AddCommand(RunListCmd)
 
 	// rootCmd.AddCommand(triggerCmd)
 

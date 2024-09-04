@@ -29,9 +29,9 @@ import (
 )
 
 // getCmd represents the get command
-var RunAnalysisCmd = &cobra.Command{
-	Use:   "analysis",
-	Short: "Display the properties of a trigger by name.",
+var RunListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List all the runs of a pipeline in a factory in a given time range and order by start time, optionally filtered by pipeline name, and print the results in CSV format.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
 
@@ -167,9 +167,9 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// getCmd.PersistentFlags().String("foo", "", "A help for foo")
-	RunAnalysisCmd.PersistentFlags().StringP("pipelineName", "n", "", "Only query runs with the specified pipeline name.")
-	RunAnalysisCmd.PersistentFlags().StringP("startAfter", "s", "", "Only query runs that started after the specified time.")
-	RunAnalysisCmd.PersistentFlags().StringP("endBefore", "e", "", "Only query runs that ended before the specified time.")
+	RunListCmd.PersistentFlags().StringP("pipelineName", "n", "", "Only query runs with the specified pipeline name.")
+	RunListCmd.PersistentFlags().StringP("startAfter", "s", "", "Only query runs that started after the specified time.")
+	RunListCmd.PersistentFlags().StringP("endBefore", "e", "", "Only query runs that ended before the specified time.")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
