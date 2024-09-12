@@ -4,7 +4,7 @@
 set -e
 
 VERSION="0.2.3"
-FILE="adf-cli_cli_$VERSION"
+FILE="adf-cli_$VERSION"
 
 # Include operating system in file name.
 OS="$(uname -s | cut -d '-' -f 1)"
