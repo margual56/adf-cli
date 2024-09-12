@@ -85,7 +85,7 @@ unzip -q "${FILE}"
 # Add adf-cli to path.
 chmod +x ./adf-cli
 cp ./adf-cli "$TARGET"
-echo "Installed $("$TARGET/adf-cli" -v) at $TARGET/adf-cli."
+echo "Installed adf-cli v${VERSION} at $TARGET/adf-cli."
 
 # Clean up temporary directory.
 cd "$OLDPWD"
