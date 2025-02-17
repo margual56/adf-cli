@@ -3,7 +3,7 @@
 # Note: we cannot assume we're running bash and use the set -euo pipefail approach.
 set -e
 
-VERSION="0.2.3"
+version="0.2.4-alpha"
 FILE="adf-cli_$VERSION"
 
 # Include operating system in file name.
