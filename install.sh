@@ -76,8 +76,12 @@ fi
 tmpdir="$(mktemp -d)"
 cd "$tmpdir"
 
+echo "Downloading https://github.com/margual56/adf-cli/releases/download/v${VERSION}/${FILE}.zip"
+
 # Download release archive.
 curl -L -s -O "https://github.com/margual56/adf-cli/releases/download/v${VERSION}/${FILE}.zip"
+
+ls -ahl | grep "${FILE}"
 
 # Unzip release archive.
 unzip -q "${FILE}"
