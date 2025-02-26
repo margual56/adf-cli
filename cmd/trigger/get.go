@@ -32,7 +32,7 @@ var GetTriggerCmd = &cobra.Command{
 	Short: "Display the properties of a trigger by name.",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
+		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd)
 		var triggerName = args[0]
 
 		clientFactory, err := GetClientFactory(subscriptionId)

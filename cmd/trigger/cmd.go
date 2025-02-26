@@ -31,7 +31,7 @@ import (
 
 // Get the subscriptionId, resourceGroupName, and factoryName from the environment variables or command line flags.
 // If the values are not set, the program will exit.
-func GetArgs(cmd *cobra.Command, args []string) (string, string, string) {
+func GetArgs(cmd *cobra.Command) (string, string, string) {
 	var subscriptionId string
 	if viper.IsSet("subscriptionId") {
 		subscriptionId = viper.GetString("subscriptionId")
