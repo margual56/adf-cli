@@ -20,18 +20,25 @@ package trigger
 import (
 	"context"
 	"log"
+	"sync"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
 )
 
+type StopPollerInfo = struct {
+	triggerName string
+	poller      *runtime.Poller[armdatafactory.TriggersClientStopResponse]
+}
+
 // getCmd represents the get command
 var StopTriggerCmd = &cobra.Command{
-	Use:   "stop <triggerName>",
+	Use:   "stop [triggerNames]",
 	Short: "Stop a trigger in a data factory.",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
-		var triggerName = args[0]
+		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd)
 
 		clientFactory, err := GetClientFactory(subscriptionId)
 		if err != nil {
@@ -39,17 +46,48 @@ var StopTriggerCmd = &cobra.Command{
 		}
 
 		ctx := context.Background()
-		log.Printf("stopping trigger %q", triggerName)
-		poller, err := clientFactory.NewTriggersClient().BeginStop(ctx, resourceGroupName, factoryName, triggerName, nil)
-		if err != nil {
-			log.Fatalf("failed to finish the request: %v", err)
-		}
-		_, err = poller.PollUntilDone(ctx, nil)
-		if err != nil {
-			log.Fatalf("failed to pull the result: %v", err)
+		var wgStart, wgPoll sync.WaitGroup
+		pollers := make(chan StopPollerInfo, len(args))
+
+		for _, triggerName := range args {
+			wgStart.Add(1)
+			go func(triggerName string) {
+				defer wgStart.Done()
+				log.Printf("stopping trigger %q", triggerName)
+				poller, err := clientFactory.NewTriggersClient().BeginStop(ctx, resourceGroupName, factoryName, triggerName, nil)
+				if err != nil {
+					log.Fatalf("failed to finish the request: %v", err)
+				}
+				pollers <- StopPollerInfo{
+					triggerName,
+					poller,
+				}
+			}(triggerName)
 		}
 
-		log.Printf("trigger %q stopped successfully", triggerName)
+		// Close the channel after all triggers are started
+		go func() {
+			wgStart.Wait()
+			close(pollers)
+		}()
+
+		// Poll until done for each trigger
+		for poller := range pollers {
+			wgPoll.Add(1)
+			go func(pollerInfo StopPollerInfo) {
+				defer wgPoll.Done()
+				if err != nil {
+					log.Fatalf("failed to finish the request: %v", err)
+				}
+				_, err = pollerInfo.poller.PollUntilDone(ctx, nil)
+				if err != nil {
+					log.Fatalf("failed to pull the result: %v", err)
+				}
+				log.Printf("trigger %q started successfully", pollerInfo.triggerName)
+			}(poller)
+		}
+
+		wgPoll.Wait()
 	},
 }
 

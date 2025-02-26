@@ -30,7 +30,7 @@ var ListTriggerCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all triggers in a factory.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd, args)
+		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd)
 
 		clientFactory, err := GetClientFactory(subscriptionId)
 		if err != nil {
