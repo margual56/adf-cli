@@ -20,7 +20,9 @@ package trigger
 import (
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
@@ -63,10 +65,29 @@ func GetArgs(cmd *cobra.Command, args []string) (string, string, string) {
 // Create a new client factory with the default Azure credential
 // If the credential cannot be obtained, the program will exit.
 func GetClientFactory(subscriptionId string) (*armdatafactory.ClientFactory, error) {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		log.Fatalf("failed to obtain a credential: %v", err)
+	clientID := os.Getenv("AZURE_CLIENT_ID")
+	tenantID := os.Getenv("AZURE_TENANT_ID")
+	clientSecret := os.Getenv("AZURE_CLIENT_SECRET")
+
+	var cred azcore.TokenCredential
+	var err error
+
+	if clientID != "" && tenantID != "" && clientSecret != "" {
+		// Use ClientSecretCredential if Service Principal details are provided
+		cred, err = azidentity.NewClientSecretCredential(tenantID, clientID, clientSecret, nil)
+		if err != nil {
+			log.Fatalf("Failed to obtain a credential using Service Connection: %v", err)
+		}
+		log.Println("Using Azure DevOps Service Connection for authentication")
+	} else {
+		// Fall back to DefaultAzureCredential if no explicit credentials are provided
+		cred, err = azidentity.NewDefaultAzureCredential(nil)
+		if err != nil {
+			log.Fatalf("Failed to obtain a credential: %v", err)
+		}
+		log.Println("Using DefaultAzureCredential (Managed Identity, CLI, etc.)")
 	}
+
 	return armdatafactory.NewClientFactory(subscriptionId, cred, nil)
 }
 
