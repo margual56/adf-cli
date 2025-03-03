@@ -25,6 +25,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v8"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 type StartPollerInfo = struct {
@@ -39,6 +40,7 @@ var StartTriggerCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var subscriptionId, resourceGroupName, factoryName = GetArgs(cmd)
+		fail_hard := viper.GetBool("fail-hard")
 
 		clientFactory, err := GetClientFactory(subscriptionId)
 		if err != nil {
@@ -57,11 +59,16 @@ var StartTriggerCmd = &cobra.Command{
 				log.Printf("starting trigger %q", triggerName)
 				poller, err := clientFactory.NewTriggersClient().BeginStart(ctx, resourceGroupName, factoryName, triggerName, nil)
 				if err != nil {
-					log.Fatalf("failed to finish the request: %v", err)
-				}
-				pollers <- StartPollerInfo{
-					triggerName: triggerName,
-					poller:      poller,
+					if fail_hard {
+						log.Fatalf("failed to finish the request: %v", err)
+					} else {
+						log.Printf("failed to finish the request: %v", err)
+					}
+				} else {
+					pollers <- StartPollerInfo{
+						triggerName: triggerName,
+						poller:      poller,
+					}
 				}
 			}(triggerName)
 		}
@@ -79,7 +86,11 @@ var StartTriggerCmd = &cobra.Command{
 				defer wgPoll.Done()
 				_, err = pollerInfo.poller.PollUntilDone(ctx, nil)
 				if err != nil {
-					log.Fatalf("failed to pull the result: %v", err)
+					if fail_hard {
+						log.Fatalf("failed to pull the result: %v", err)
+					} else {
+						log.Printf("failed to pull the result: %v", err)
+					}
 				}
 				log.Printf("trigger %q started successfully", pollerInfo.triggerName)
 			}(poller)
