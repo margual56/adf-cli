@@ -117,6 +117,8 @@ func init() {
 	// and all subcommands, e.g.:
 	// triggerCmd.PersistentFlags().String("foo", "", "A help for foo")
 
+	TriggerCmd.PersistentFlags().Bool("fail-hard", false, "Use this flag to stop the execution at the first error. For example, if you give multiple triggers one of which does not exist, without fail hard the execution will continue and the other triggers will be processed.")
+
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// triggerCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

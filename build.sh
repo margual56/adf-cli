@@ -1,12 +1,12 @@
 #!/bin/sh
 
+# Get the version from the go.mod file
+version="0.2.5"
+
 if [ -d "./out" ]; then
     rm -rf ./out
 fi
 mkdir out
-
-# Get the version from the go.mod file
-version="0.2.4"
 
 env GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o    "out/adf-cli_${version}_linux_arm64"
 env GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o      "out/adf-cli_${version}_linux_arm"
